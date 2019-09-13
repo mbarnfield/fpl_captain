@@ -7,7 +7,7 @@ output: html_document
 
 ## Picking an FPL captain: Gameweek 4
 
-Two weeks ago I wrote a post about picking a Fantasy Football captain for gameweek 4, based on a Bayesian multilevel model of player points and its predictions for the upcoming matches. The post got a fair amount of attention from Reddit and it quickly became apparent to me that I was going to need to revise my model, because it was pretty crap. I have since put a lot of work into improving the model, sorting out more data (from [vaastav's github]((https://github.com/vaastav/Fantasy-Premier-League))) and hopefully getting more meaningful estimates. The ggplots are prettier now too. All code is on [my github](https://github.com/mbarnfield/fpl) and should now be a bit clearer and cleaner.
+Two weeks ago I wrote a post about picking a Fantasy Football captain for gameweek 4, based on a Bayesian multilevel model of player points and its predictions for the upcoming matches. The post got a fair amount of attention from Reddit and it quickly became apparent to me that I was going to need to revise my model, because it was pretty crap. I have since put a lot of work into improving the model, sorting out more data (from [vaastav's github]((https://github.com/vaastav/Fantasy-Premier-League))) and hopefully getting more meaningful estimates. The ggplots are prettier now too. All code is on [my github](https://github.com/mbarnfield/fpl_captain) and should now be a bit clearer and cleaner.
 
 ## Last gameweek
 

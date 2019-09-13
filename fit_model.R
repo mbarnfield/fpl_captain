@@ -42,37 +42,4 @@ m <- brms::brm(
   control = list(adapt_delta = 0.99)
 )
 
-prior <- c(brms::set_prior("normal(0, 0.5)", class = "b"),
-           set_prior("normal(1, 5)", coef = "opponentNorwich"),
-           set_prior("normal(1, 5)", coef = "opponentAstonVilla"),
-           set_prior("normal(1, 5)", coef = "opponentSheffieldUtd"),
-           set_prior("student_t(3, 0, 10)", class = "Intercept"),
-           set_prior("student_t(3, 0, 10)", class = "sigma"),
-           set_prior("student_t(3, 0, 10)", class = "sd"),
-           set_prior("student_t(3, 0, 10)", class = "sds")
-)
-
-m_train_normal_0.5 <- brms::brm(f,
-                                fpl_min_point,
-                                family = gaussian(),
-                                prior = prior,
-                                file = here::here("data", "train_11"),
-                                iter = 2e3,
-                                warmup = 500,
-                                chains = 4,
-                                cores = 4,
-                                refresh = 100)
-
-
-# update model
-m_2 <- update(
-  train_3,
-  newdata = fpl_all,
-  file = here::here("data", "fpl_fit_gw4"),
-  iter = 2e3,
-  cores = 4,
-  chains = 4,
-  recompile = F
-)
-
 
