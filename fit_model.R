@@ -15,7 +15,7 @@ library(brms)
 load(here::here("data", "fpl_min_point.rda"))
 
 # specify formula
-f <- points ~ s(gw) + player + opponent + home + (1 | team)
+f <- points | weights(weight) ~ s(gw) + player + opponent + home + (1 | mm(team_1, team_2))
 
 # specify priors
 prior <- c(brms::set_prior("normal(0, 1.5)", class = "b"),
@@ -27,13 +27,12 @@ prior <- c(brms::set_prior("normal(0, 1.5)", class = "b"),
            set_prior("student_t(3, 0, 10)", class = "sd"),
            set_prior("student_t(3, 0, 10)", class = "sds"))
 
-# train model
+# train model - RUN OUTSIDE OF R PROJECT
 m <- brms::brm(
   f,
   fpl_min_point,
   family = gaussian(),
   prior = prior,
-  file = here::here("models", "main_model"),
   iter = 4e3,
   warmup = 1000,
   chains = 4,
@@ -41,5 +40,4 @@ m <- brms::brm(
   refresh = 50,
   control = list(adapt_delta = 0.99)
 )
-
 
