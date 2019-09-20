@@ -2204,6 +2204,7 @@ current_multi$team_1 <- as_factor(current_multi$team_1)
 current_multi[!complete.cases(current_multi),]
 current_multi$player <- as_factor(current_multi$player)
 
+current_gw <- current_multi
 # overall df
 fpl_all <- as.data.frame(fpl_all)
 str(fpl_all)
@@ -2219,8 +2220,11 @@ save("fpl_all", file = here::here("data", "fpl_all.rda"))
 # fpl_min_point (reduced df of just players who have ever scored points)
 fpl_min_point <- fpl_all %>%
   group_by(player) %>%
-  filter(sum(points) > 0)
+  filter(sum(points) > 0) %>%
+  as.data.frame()
 
-save("fpl_min_point", file = here::here("data", "fpl_min_point.rda"))
+str(fpl_min_point)
+
+save("fpl_min_point", file = here::here("Desktop/workflow/fpl_captain/data", "fpl_min_point.rda"))
 
 

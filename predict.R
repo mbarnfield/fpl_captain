@@ -12,32 +12,43 @@ librarian::shelf(tidyverse,
 fpl_fit <- read_rds(here("models", "main_model.RDS"))
 
 # new data to fit values for (upcoming gameweek)
-gw5_ha <- filter(all_fixtures, gw == 5)
-gw5_all <- filter(fixtures_all, gw == 5) %>%
+gw6_ha <- filter(all_fixtures, gw == 6)
+gw6_all <- filter(fixtures_all, gw == 6) %>%
   rename(team = team_1,
          opponent = team_2) %>%
   select(-gw)
 
-gw5 <- current_gw %>%
-  select(player, team, price) %>%
+gw6 <- current_gw %>%
+  select(player, team, price, team_1, team_2, minutes) %>%
   mutate(home = case_when(
-    team %in% gw5_ha$team_h ~ 1,
+    team %in% gw6_ha$team_h ~ 1,
     TRUE ~0
   )) %>%
-  merge(gw5_all) %>%
-  mutate(gw = 105)
+  merge(gw6_all) %>%
+  mutate(gw = 106)
 
-save(gw5, file = here::here("data", "gw5.rda"))
+save(gw6, file = here::here("data", "gw6.rda"))
 
-gw5_min <- filter(gw5,
-                  player %in% fpl_min_point$player)
+gw6_min <- gw6 %>%
+  filter(player %in% fpl_min_point$player)
 
-save(gw5_min, file = here::here("data", "gw5_min.rda"))
+sum(gw6_min$opponent %in% fpl_min_point$opponent)
+
+save(gw6_min, file = here::here("data", "gw6_min.rda"))
+
+str(gw6_min)
+str(fpl_min_point)
+str(fpl_all)
 
 # with fitted()
-pred <- fitted(fpl_fit, newdata = gw5_min)
-pred <- cbind(gw5_min, pred)
+pred <- fitted(m_gw6, newdata = gw6)
+pred <- cbind(gw6, pred)
 pred$where <- case_when(pred$home == 0 ~ "Away", TRUE ~ "Home")
+
+# no spline
+pred_ns <- fitted(m_gw6, newdata = gw6)
+pred_ns <- cbind(gw6, pred_ns)
+pred_ns$where <- case_when(pred_ns$home == 0 ~ "Away", TRUE ~ "Home")
 
 # top 10
 top_10 <- pred %>%
@@ -88,10 +99,12 @@ ggplot2::ggplot(top_25, aes(reorder(player, Estimate),
              size = 1.5) +
   ylab("Fitted points") +
   xlab("") +
-  ggtitle("Top 25 highest predicted points, gameweek 5, 2019",
-          subtitle = "Prior: normal(0, 1.5). Uses fitted() function.")
+  ggtitle("Top 25 highest predicted points, gameweek 6, 2019",
+          subtitle = "Prior: normal(0, 0.5). Uses fitted() function.")
 
-ggsave(here::here("images", "gameweek_5_top25.png"))
+ggsave(here::here("images", "gameweek_6_top25.png"))
+
+
 
 ggplot2::ggplot(top_50, aes(reorder(player, Estimate), 
                             Estimate,
@@ -114,9 +127,9 @@ ggsave(here::here("images", "gameweek_5_top50.png"))
 
 
 # with predict()
-pred_p <- predict(fpl_fit, newdata = gw5_min)
-pred_p <- cbind(gw5_min, pred_p)
-pred_p$where <- case_when(pred$home == 0 ~ "Away", TRUE ~ "Home")
+pred_p <- predict(m_gw6, newdata = gw6)
+pred_p <- cbind(gw6, pred_p)
+pred_p$where <- case_when(pred_p$home == 0 ~ "Away", TRUE ~ "Home")
 
 # top 10
 top_10_p <- pred_p %>%
@@ -167,10 +180,10 @@ ggplot2::ggplot(top_25_p, aes(reorder(player, Estimate),
              size = 1.5) +
   ylab("Predicted points") +
   xlab("") +
-  ggtitle("Top 25 highest predicted points, gameweek 5, 2019",
-          subtitle = "Prior: normal(0, 1.5). Uses predict() function.")
+  ggtitle("Top 25 highest predicted points, gameweek 6, 2019",
+          subtitle = "Prior: normal(0, 0.5). Uses predict() function.")
 
-ggsave(here::here("images", "gameweek_5_top25_p.png"))
+ggsave(here::here("images", "gameweek_6_top25_p.png"))
 
 ggplot2::ggplot(top_50_p, aes(reorder(player, Estimate), 
                             Estimate,
