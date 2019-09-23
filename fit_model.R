@@ -68,3 +68,13 @@ saveRDS(m_gw6, file = "main_model_gw6.rds")
 
 
 
+
+overtime <- fitted(m_gw6, newdata = fpl_all)
+overtime <- cbind(overtime, fpl_all)
+ 
+overtime_mané <- overtime %>%
+  filter(player == "Sadio Mané")
+overtime_son <- overtime %>%
+  filter(player == "Heung-Min Son")
+overtime_salah <- overtime %>%
+  filter(player == "Mohamed Salah")
